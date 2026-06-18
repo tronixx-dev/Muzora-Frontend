@@ -5,12 +5,14 @@ import { useAuthStore } from '../../context/store';
 import {
   FiHome, FiSearch, FiHeart, FiClock,
   FiList, FiLogOut, FiShield, FiMusic,
-  FiPlusSquare,
+  FiPlusSquare, FiBell, FiUser,
 } from 'react-icons/fi';
 
 const navItems = [
-  { href: '/',          label: 'Home',           icon: FiHome   },
-  { href: '/search',    label: 'Search',          icon: FiSearch },
+  { href: '/',              label: 'Home',          icon: FiHome   },
+  { href: '/search',        label: 'Search',         icon: FiSearch },
+  { href: '/notifications', label: 'Notifications',  icon: FiBell   },
+  { href: '/profile',       label: 'Profile',        icon: FiUser   },
 ];
 
 const libraryItems = [
@@ -18,8 +20,6 @@ const libraryItems = [
   { href: '/liked',     label: 'Liked songs',     icon: FiHeart  },
   { href: '/history',   label: 'Recently played', icon: FiClock  },
 ];
-
-
 
 export default function AppLayout({ children }) {
   const router = useRouter();
@@ -112,17 +112,29 @@ export default function AppLayout({ children }) {
         </div>
 
         {user && (
-          <div className="bg-dark-300 rounded-lg px-4 py-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-black font-bold text-sm flex-shrink-0">
-              {user.name?.[0]?.toUpperCase()}
+          <Link
+            href="/profile"
+            className="bg-dark-300 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-dark-100 transition-colors group"
+          >
+            <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-black font-bold text-sm flex-shrink-0 overflow-hidden">
+              {user.avatar ? (
+                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+              ) : (
+                user.name?.[0]?.toUpperCase()
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-white text-sm font-medium truncate">{user.name}</p>
+              <p className="text-gray-500 text-xs truncate">{user.email}</p>
             </div>
-            <button onClick={logout} className="text-gray-500 hover:text-white transition-colors">
+            <button
+              onClick={(e) => { e.preventDefault(); logout(); }}
+              className="text-gray-500 hover:text-red-400 transition-colors"
+              title="Sign out"
+            >
               <FiLogOut size={16} />
             </button>
-          </div>
+          </Link>
         )}
       </aside>
 
@@ -138,13 +150,19 @@ export default function AppLayout({ children }) {
             <span className="font-bold text-white text-lg">Muzora</span>
           </div>
           <div className="flex items-center gap-4">
+            <Link href="/notifications" className="text-gray-400 hover:text-white relative">
+              <FiBell size={20} />
+            </Link>
+            <Link href="/profile" className="text-gray-400 hover:text-white">
+              <FiUser size={20} />
+            </Link>
             {user?.role === 'admin' && (
               <Link href="/admin" className="text-yellow-400">
                 <FiShield size={20} />
               </Link>
             )}
             {user && (
-              <button onClick={logout} className="text-gray-400">
+              <button onClick={logout} className="text-gray-400 hover:text-red-400">
                 <FiLogOut size={20} />
               </button>
             )}
@@ -155,8 +173,6 @@ export default function AppLayout({ children }) {
           {children}
         </div>
       </main>
-
-      
 
       <Player />
     </div>
