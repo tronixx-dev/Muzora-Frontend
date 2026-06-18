@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import AppLayout from '../components/layout/AppLayout';
-import { SongCard, SongRow } from '../components/ui/SongCard';
-import AlbumCard from '../components/ui/AlbumCard';
-import api from '../lib/api';
-import { useAuthStore, usePlayerStore } from '../context/store';
+import AppLayout from '../../components/layout/AppLayout';
+import { SongCard, SongRow } from '../../components/ui/SongCard';
+import AlbumCard from '../../components/ui/AlbumCard';
+import api from '../../lib/api';
+import { useAuthStore, usePlayerStore } from '../../context/store';
 import { FiPlay, FiTrendingUp, FiStar, FiZap } from 'react-icons/fi';
 import Link from 'next/link';
 
