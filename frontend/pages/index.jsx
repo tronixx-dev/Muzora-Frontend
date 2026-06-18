@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import AppLayout from '../../components/layout/AppLayout';
+import AppLayout from '../components/layout/AppLayout';
 import Link from 'next/link';
-import api from '../../lib/api';
+import api from '../lib/api';
 import {
   FiUpload, FiUsers, FiDisc, FiMusic,
   FiTrendingUp, FiPlay, FiHeadphones,
