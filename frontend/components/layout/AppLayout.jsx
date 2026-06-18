@@ -19,6 +19,13 @@ const libraryItems = [
   { href: '/history',   label: 'Recently played', icon: FiClock  },
 ];
 
+const bottomNavItems = [
+  { href: '/',          label: 'Home',    icon: FiHome   },
+  { href: '/search',    label: 'Search',  icon: FiSearch },
+  { href: '/liked',     label: 'Liked',   icon: FiHeart  },
+  { href: '/playlists', label: 'Library', icon: FiList   },
+];
+
 export default function AppLayout({ children }) {
   const router = useRouter();
   const { user, logout } = useAuthStore();
@@ -26,12 +33,10 @@ export default function AppLayout({ children }) {
   return (
     <div className="flex h-screen bg-dark-400 overflow-hidden">
 
-      {/* Sidebar */}
-      <aside className="w-64 flex flex-col flex-shrink-0 gap-2 p-2">
+      {/* Sidebar - HIDDEN on mobile, visible on md+ */}
+      <aside className="hidden md:flex w-64 flex-col flex-shrink-0 gap-2 p-2">
 
-        {/* Top nav */}
         <div className="bg-dark-300 rounded-lg p-4">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-3 mb-6 px-2">
             <div className="w-9 h-9 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
               <FiMusic className="text-black" size={18} />
@@ -39,7 +44,6 @@ export default function AppLayout({ children }) {
             <span className="font-bold text-white text-xl tracking-tight">Muzora</span>
           </Link>
 
-          {/* Main nav */}
           <nav className="flex flex-col gap-1">
             {navItems.map(({ href, label, icon: Icon }) => (
               <Link
@@ -58,7 +62,6 @@ export default function AppLayout({ children }) {
           </nav>
         </div>
 
-        {/* Library */}
         <div className="bg-dark-300 rounded-lg p-4 flex-1 overflow-y-auto">
           <div className="flex items-center justify-between mb-4 px-2">
             <span className="text-gray-400 text-sm font-medium flex items-center gap-2">
@@ -93,7 +96,6 @@ export default function AppLayout({ children }) {
             ))}
           </nav>
 
-          {/* Admin */}
           {user?.role === 'admin' && (
             <Link
               href="/admin"
@@ -114,7 +116,6 @@ export default function AppLayout({ children }) {
           )}
         </div>
 
-        {/* User */}
         {user && (
           <div className="bg-dark-300 rounded-lg px-4 py-3 flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-black font-bold text-sm flex-shrink-0">
@@ -123,11 +124,7 @@ export default function AppLayout({ children }) {
             <div className="min-w-0 flex-1">
               <p className="text-white text-sm font-medium truncate">{user.name}</p>
             </div>
-            <button
-              onClick={logout}
-              className="text-gray-500 hover:text-white transition-colors"
-              title="Sign out"
-            >
+            <button onClick={logout} className="text-gray-500 hover:text-white transition-colors">
               <FiLogOut size={16} />
             </button>
           </div>
@@ -135,9 +132,54 @@ export default function AppLayout({ children }) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto bg-gradient-to-b from-dark-200 to-dark-400 rounded-lg m-2 ml-0 pb-28">
-        <div className="max-w-6xl mx-auto px-6 py-8">{children}</div>
+      <main className="flex-1 overflow-y-auto bg-gradient-to-b from-dark-200 to-dark-400 md:rounded-lg md:m-2 md:ml-0 pb-36 md:pb-28">
+
+        {/* Mobile top header */}
+        <div className="md:hidden flex items-center justify-between px-4 pt-8 pb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+              <FiMusic className="text-black" size={16} />
+            </div>
+            <span className="font-bold text-white text-lg">Muzora</span>
+          </div>
+          <div className="flex items-center gap-4">
+            {user?.role === 'admin' && (
+              <Link href="/admin" className="text-yellow-400">
+                <FiShield size={20} />
+              </Link>
+            )}
+            {user && (
+              <button onClick={logout} className="text-gray-400">
+                <FiLogOut size={20} />
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto px-4 md:px-6 py-2 md:py-8">
+          {children}
+        </div>
       </main>
+
+      {/* Mobile bottom navigation */}
+      <div className="md:hidden fixed bottom-16 left-0 right-0 bg-dark-300 border-t border-white/10 z-40">
+        <div className="flex items-center justify-around px-2 py-2">
+          {bottomNavItems.map(({ href, label, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors ${
+                router.pathname === href
+                  ? 'text-green-500'
+                  : 'text-gray-500'
+              }`}
+            >
+              <Icon size={22} />
+              <span className="text-xs font-medium">{label}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
 
       <Player />
     </div>
