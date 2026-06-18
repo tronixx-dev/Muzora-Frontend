@@ -15,11 +15,10 @@ function getGreeting() {
 }
 
 export default function HomePage() {
-  const [songs,        setSongs]        = useState([]);
-  const [albums,       setAlbums]       = useState([]);
-  const [artists,      setArtists]      = useState([]);
-  const [featuredSong, setFeaturedSong] = useState(null);
-  const [loading,      setLoading]      = useState(true);
+  const [songs,   setSongs]   = useState([]);
+  const [albums,  setAlbums]  = useState([]);
+  const [artists, setArtists] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { user }  = useAuthStore();
   const playSong  = usePlayerStore((s) => s.playSong);
 
@@ -28,19 +27,15 @@ export default function HomePage() {
       api.get('/songs?limit=8'),
       api.get('/albums?limit=6'),
       api.get('/artists?limit=8'),
-      api.get('/admin/featured'),
     ])
-      .then(([s, a, ar, f]) => {
+      .then(([s, a, ar]) => {
         setSongs(s.data.songs);
         setAlbums(a.data.albums);
         setArtists(ar.data.artists);
-        if (f.data.song) setFeaturedSong(f.data.song);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
-
-  const hero = featuredSong || songs[0];
 
   if (loading) {
     return (
@@ -63,17 +58,18 @@ export default function HomePage() {
         </h1>
       </div>
 
-      {hero && (
+      {/* Featured hero song */}
+      {songs[0] && (
         <div
           className="relative rounded-2xl overflow-hidden mb-8 md:mb-10 cursor-pointer group"
           style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}
-          onClick={() => playSong(hero, songs)}
+          onClick={() => playSong(songs[0], songs)}
         >
           <div className="flex items-center gap-4 md:gap-8 p-5 md:p-8">
             <div className="relative flex-shrink-0">
               <img
-                src={hero.coverUrl || '/placeholder.png'}
-                alt={hero.title}
+                src={songs[0].coverUrl || '/placeholder.png'}
+                alt={songs[0].title}
                 className="w-24 h-24 md:w-40 md:h-40 rounded-xl object-cover shadow-2xl"
               />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -85,17 +81,17 @@ export default function HomePage() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
                 <span className="bg-green-500 text-black text-xs font-bold px-2 py-0.5 rounded-full">
-                  {featuredSong ? 'Featured' : 'Trending'}
+                  🔥 Trending
                 </span>
               </div>
               <h2 className="text-white text-2xl md:text-4xl font-bold truncate mb-1">
-                {hero.title}
+                {songs[0].title}
               </h2>
-              <p className="text-gray-300 text-sm md:text-lg">{hero.artist?.name}</p>
-              <p className="text-gray-500 text-xs md:text-sm mt-2">{hero.genre}</p>
+              <p className="text-gray-300 text-sm md:text-lg">{songs[0].artist?.name}</p>
+              <p className="text-gray-500 text-xs md:text-sm mt-2">{songs[0].genre}</p>
               <button
                 className="mt-4 flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black font-bold rounded-full px-5 py-2 text-sm transition-all hover:scale-105"
-                onClick={(e) => { e.stopPropagation(); playSong(hero, songs); }}
+                onClick={(e) => { e.stopPropagation(); playSong(songs[0], songs); }}
               >
                 <FiPlay size={14} fill="currentColor" /> Play now
               </button>
@@ -105,6 +101,7 @@ export default function HomePage() {
         </div>
       )}
 
+      {/* Trending songs */}
       {songs.length > 0 && (
         <section className="mb-8 md:mb-10">
           <div className="flex items-center justify-between mb-4 md:mb-5">
@@ -124,6 +121,7 @@ export default function HomePage() {
         </section>
       )}
 
+      {/* Popular artists */}
       {artists.length > 0 && (
         <section className="mb-8 md:mb-10">
           <div className="flex items-center justify-between mb-4 md:mb-5">
@@ -152,6 +150,7 @@ export default function HomePage() {
         </section>
       )}
 
+      {/* New albums */}
       {albums.length > 0 && (
         <section className="mb-8 md:mb-10">
           <div className="flex items-center justify-between mb-4 md:mb-5">
@@ -165,13 +164,11 @@ export default function HomePage() {
         </section>
       )}
 
+      {/* Discover */}
       <section className="mb-8 md:mb-10">
         <h2 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-5">Discover</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link
-            href="/trending"
-            className="flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-green-500/20 to-green-500/5 border border-green-500/20 hover:border-green-500/40 transition-all"
-          >
+          <Link href="/trending" className="flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-green-500/20 to-green-500/5 border border-green-500/20 hover:border-green-500/40 transition-all">
             <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center flex-shrink-0">
               <FiTrendingUp size={22} className="text-black" />
             </div>
@@ -180,11 +177,7 @@ export default function HomePage() {
               <p className="text-gray-400 text-xs mt-0.5">Top 10 most played</p>
             </div>
           </Link>
-
-          <Link
-            href="/new-releases"
-            className="flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-purple-500/20 to-purple-500/5 border border-purple-500/20 hover:border-purple-500/40 transition-all"
-          >
+          <Link href="/new-releases" className="flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-purple-500/20 to-purple-500/5 border border-purple-500/20 hover:border-purple-500/40 transition-all">
             <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
               <FiStar size={22} className="text-white" />
             </div>
@@ -193,11 +186,7 @@ export default function HomePage() {
               <p className="text-gray-400 text-xs mt-0.5">Fresh tracks just dropped</p>
             </div>
           </Link>
-
-          <Link
-            href="/recommended"
-            className="flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-yellow-500/20 to-yellow-500/5 border border-yellow-500/20 hover:border-yellow-500/40 transition-all"
-          >
+          <Link href="/recommended" className="flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-yellow-500/20 to-yellow-500/5 border border-yellow-500/20 hover:border-yellow-500/40 transition-all">
             <div className="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center flex-shrink-0">
               <FiZap size={22} className="text-black" />
             </div>
@@ -209,6 +198,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Top songs desktop */}
       {songs.length > 0 && (
         <section className="hidden md:block mb-10">
           <h2 className="text-xl font-bold text-white mb-5">Top songs</h2>
@@ -226,15 +216,14 @@ export default function HomePage() {
         </section>
       )}
 
+      {/* Empty state */}
       {songs.length === 0 && albums.length === 0 && artists.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <div className="w-20 h-20 bg-dark-100 rounded-full flex items-center justify-center mb-6">
             <span className="text-4xl">🎵</span>
           </div>
           <h2 className="text-white text-xl font-bold mb-2">No music yet</h2>
-          <p className="text-gray-400 text-sm">
-            Upload songs from the admin panel to get started
-          </p>
+          <p className="text-gray-400 text-sm">Upload songs from the admin panel to get started</p>
         </div>
       )}
     </AppLayout>
