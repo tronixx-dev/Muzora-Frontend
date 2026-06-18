@@ -1,5 +1,5 @@
 import { usePlayerStore } from '../../context/store';
-import { FiPlay, FiPause, FiHeart } from 'react-icons/fi';
+import { FiPlay, FiPause, FiHeart, FiMoreHorizontal } from 'react-icons/fi';
 
 function fmt(sec) {
   if (!sec) return '--';
@@ -18,11 +18,11 @@ export function SongRow({ song, index, queue = [] }) {
   return (
     <div
       onClick={handleClick}
-      className={`flex items-center gap-4 px-4 py-2 rounded-lg cursor-pointer group transition-colors ${
+      className={`flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 rounded-xl cursor-pointer group transition-all ${
         isActive ? 'bg-white/10' : 'hover:bg-white/5'
       }`}
     >
-      {/* Index / Play icon */}
+      {/* Index */}
       <div className="w-5 flex-shrink-0 text-center">
         {isActive && isPlaying ? (
           <div className="flex items-end justify-center gap-0.5 h-4">
@@ -32,43 +32,51 @@ export function SongRow({ song, index, queue = [] }) {
           </div>
         ) : (
           <>
-            <span className="text-gray-400 text-sm group-hover:hidden">{index + 1}</span>
-            <FiPlay size={14} className="text-white hidden group-hover:block mx-auto" fill="currentColor" />
+            <span className="text-gray-500 text-sm group-hover:hidden">{index + 1}</span>
+            <FiPlay size={13} className="text-white hidden group-hover:block mx-auto" fill="currentColor" />
           </>
         )}
       </div>
 
-      {/* Cover + info */}
+      {/* Cover */}
       <img
         src={song.coverUrl || '/placeholder.png'}
         alt={song.title}
-        className="w-10 h-10 rounded object-cover flex-shrink-0"
+        className="w-10 h-10 rounded-lg object-cover flex-shrink-0 shadow-md"
       />
+
+      {/* Info */}
       <div className="min-w-0 flex-1">
-        <p className={`text-sm font-medium truncate ${isActive ? 'text-green-500' : 'text-white'}`}>
+        <p className={`text-sm font-semibold truncate ${isActive ? 'text-green-400' : 'text-white'}`}>
           {song.title}
         </p>
-        <p className="text-xs text-gray-400 truncate hover:text-white cursor-pointer">
+        <p className="text-xs text-gray-500 truncate hover:text-white cursor-pointer transition-colors">
           {song.artist?.name}
         </p>
       </div>
 
-      {/* Album */}
-      <p className="text-xs text-gray-400 hidden md:block truncate max-w-[150px] hover:text-white cursor-pointer">
+      {/* Album - hidden on mobile */}
+      <p className="text-xs text-gray-500 hidden md:block truncate max-w-[150px] hover:text-white cursor-pointer transition-colors">
         {song.album?.title}
       </p>
 
-      {/* Like + duration */}
-      <div className="flex items-center gap-4 flex-shrink-0">
+      {/* Actions */}
+      <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
         <button
           onClick={(e) => e.stopPropagation()}
-          className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-white transition-all"
+          className="opacity-0 group-hover:opacity-100 text-gray-500 hover:text-green-400 transition-all"
         >
           <FiHeart size={15} />
         </button>
-        <span className="text-gray-400 text-sm tabular-nums w-10 text-right">
+        <span className="text-gray-500 text-xs tabular-nums w-8 md:w-10 text-right">
           {fmt(song.duration)}
         </span>
+        <button
+          onClick={(e) => e.stopPropagation()}
+          className="opacity-0 group-hover:opacity-100 text-gray-500 hover:text-white transition-all hidden md:block"
+        >
+          <FiMoreHorizontal size={16} />
+        </button>
       </div>
     </div>
   );
@@ -86,26 +94,26 @@ export function SongCard({ song, queue = [] }) {
   return (
     <div
       onClick={handleClick}
-      className="bg-dark-200 hover:bg-dark-100 p-4 rounded-xl cursor-pointer group transition-all duration-300"
+      className="bg-dark-200 hover:bg-dark-100 p-3 md:p-4 rounded-xl cursor-pointer group transition-all duration-300 border border-white/5 hover:border-white/10"
     >
-      <div className="relative mb-4">
+      <div className="relative mb-3 md:mb-4">
         <img
           src={song.coverUrl || '/placeholder.png'}
           alt={song.title}
           className="w-full aspect-square object-cover rounded-lg shadow-lg"
         />
-        <button className={`absolute bottom-2 right-2 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 ${
-          isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'
+        <button className={`absolute bottom-2 right-2 w-9 h-9 md:w-10 md:h-10 bg-green-500 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 ${
+          isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100'
         }`}>
           {isActive && isPlaying
-            ? <FiPause size={18} className="text-black" fill="currentColor" />
-            : <FiPlay size={18} className="text-black ml-0.5" fill="currentColor" />}
+            ? <FiPause size={16} className="text-black" fill="currentColor" />
+            : <FiPlay size={16} className="text-black ml-0.5" fill="currentColor" />}
         </button>
       </div>
-      <p className={`text-sm font-semibold truncate mb-1 ${isActive ? 'text-green-500' : 'text-white'}`}>
+      <p className={`text-sm font-semibold truncate mb-0.5 ${isActive ? 'text-green-400' : 'text-white'}`}>
         {song.title}
       </p>
-      <p className="text-xs text-gray-400 truncate">{song.artist?.name}</p>
+      <p className="text-xs text-gray-500 truncate">{song.artist?.name}</p>
     </div>
   );
 }
