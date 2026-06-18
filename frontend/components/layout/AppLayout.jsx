@@ -19,12 +19,7 @@ const libraryItems = [
   { href: '/history',   label: 'Recently played', icon: FiClock  },
 ];
 
-const bottomNavItems = [
-  { href: '/',          label: 'Home',    icon: FiHome   },
-  { href: '/search',    label: 'Search',  icon: FiSearch },
-  { href: '/liked',     label: 'Liked',   icon: FiHeart  },
-  { href: '/playlists', label: 'Library', icon: FiList   },
-];
+
 
 export default function AppLayout({ children }) {
   const router = useRouter();
@@ -161,25 +156,7 @@ export default function AppLayout({ children }) {
         </div>
       </main>
 
-      {/* Mobile bottom navigation */}
-      <div className="md:hidden fixed bottom-16 left-0 right-0 bg-dark-300 border-t border-white/10 z-40">
-        <div className="flex items-center justify-around px-2 py-2">
-          {bottomNavItems.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors ${
-                router.pathname === href
-                  ? 'text-green-500'
-                  : 'text-gray-500'
-              }`}
-            >
-              <Icon size={22} />
-              <span className="text-xs font-medium">{label}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
+      
 
       <Player />
     </div>
