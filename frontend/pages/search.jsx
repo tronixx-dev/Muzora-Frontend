@@ -3,17 +3,19 @@ import AppLayout from '../components/layout/AppLayout';
 import { SongRow } from '../components/ui/SongCard';
 import api from '../lib/api';
 import { FiSearch } from 'react-icons/fi';
+import Link from 'next/link';
 
-const genres = ['Afrobeats', 'Hip-hop', 'R&B', 'Pop', 'Gospel', 'Jazz', 'Classical', 'Electronic'];
-const genreColors = [
-  'from-pink-500 to-purple-600',
-  'from-yellow-400 to-orange-500',
-  'from-blue-500 to-cyan-400',
-  'from-green-400 to-teal-500',
-  'from-red-500 to-pink-500',
-  'from-indigo-500 to-blue-400',
-  'from-purple-500 to-pink-400',
-  'from-orange-400 to-red-500',
+const genres = [
+  { name: 'Afrobeats',  color: 'from-orange-500 to-red-600'    },
+  { name: 'Hip-hop',    color: 'from-purple-600 to-blue-700'   },
+  { name: 'R&B',        color: 'from-pink-500 to-purple-600'   },
+  { name: 'Pop',        color: 'from-blue-400 to-cyan-500'     },
+  { name: 'Gospel',     color: 'from-yellow-400 to-orange-500' },
+  { name: 'Jazz',       color: 'from-indigo-500 to-purple-600' },
+  { name: 'Classical',  color: 'from-gray-500 to-gray-700'     },
+  { name: 'Electronic', color: 'from-cyan-400 to-blue-500'     },
+  { name: 'Amapiano',   color: 'from-green-400 to-teal-500'    },
+  { name: 'Afropop',    color: 'from-red-400 to-pink-500'      },
 ];
 
 export default function SearchPage() {
@@ -44,6 +46,7 @@ export default function SearchPage() {
     <AppLayout>
       <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6">Search</h1>
 
+      {/* Search input */}
       <div className="relative mb-6 md:mb-10">
         <FiSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
         <input
@@ -58,33 +61,40 @@ export default function SearchPage() {
         )}
       </div>
 
-      {/* Genre browse */}
+      {/* Genre browse — shown when no query */}
       {!query && (
         <section>
-          <h2 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-5">Browse categories</h2>
+          <h2 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-5">
+            Browse categories
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            {genres.map((genre, i) => (
-              <div
-                key={genre}
-                className={`bg-gradient-to-br ${genreColors[i]} rounded-xl p-4 md:p-6 cursor-pointer hover:scale-105 transition-transform relative overflow-hidden h-20 md:h-28`}
+            {genres.map(({ name, color }) => (
+              <Link
+                key={name}
+                href={`/genres/${encodeURIComponent(name)}`}
+                className={`bg-gradient-to-br ${color} rounded-xl p-4 md:p-6 cursor-pointer hover:scale-105 transition-transform relative overflow-hidden h-20 md:h-28 block`}
               >
-                <p className="text-white font-bold text-sm md:text-lg">{genre}</p>
+                <p className="text-white font-bold text-sm md:text-lg relative z-10">{name}</p>
                 <div className="absolute -bottom-3 -right-3 w-14 h-14 md:w-20 md:h-20 bg-black/20 rounded-xl transform rotate-12" />
-              </div>
+              </Link>
             ))}
           </div>
         </section>
       )}
 
-      {/* Results */}
+      {/* Search results */}
       {query && (
         <>
           {artists.length > 0 && (
             <section className="mb-6 md:mb-8">
-              <h2 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-5">Artists</h2>
+              <h2 className="text-lg md:text-xl font-bold text-white mb-4">Artists</h2>
               <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
                 {artists.slice(0, 6).map((artist) => (
-                  <div key={artist._id} className="flex flex-col items-center gap-2 group cursor-pointer">
+                  <Link
+                    key={artist._id}
+                    href={`/artists/${artist._id}`}
+                    className="flex flex-col items-center gap-2 group cursor-pointer"
+                  >
                     <div className="w-full aspect-square rounded-full overflow-hidden bg-dark-100">
                       <img
                         src={artist.imageUrl || '/placeholder.png'}
@@ -92,9 +102,11 @@ export default function SearchPage() {
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform"
                       />
                     </div>
-                    <p className="text-white text-xs font-medium text-center truncate w-full">{artist.name}</p>
+                    <p className="text-white text-xs font-medium text-center truncate w-full">
+                      {artist.name}
+                    </p>
                     <p className="text-gray-500 text-xs">Artist</p>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </section>
@@ -102,7 +114,7 @@ export default function SearchPage() {
 
           {songs.length > 0 && (
             <section>
-              <h2 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-5">Songs</h2>
+              <h2 className="text-lg md:text-xl font-bold text-white mb-4">Songs</h2>
               <div className="flex flex-col">
                 {songs.map((song, i) => (
                   <SongRow key={song._id} song={song} index={i} queue={songs} />

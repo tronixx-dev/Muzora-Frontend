@@ -1,7 +1,8 @@
+import '../styles/globals.css';
 import { useEffect } from 'react';
 import { useAuthStore } from '../context/store';
+import { ThemeProvider } from '../context/ThemeContext';
 import { Toaster } from 'react-hot-toast';
-import '../styles/globals.css';
 
 export default function App({ Component, pageProps }) {
   const initAuth = useAuthStore((s) => s.initAuth);
@@ -11,9 +12,18 @@ export default function App({ Component, pageProps }) {
   }, []);
 
   return (
-    <>
-      <Toaster position="top-right" />
+    <ThemeProvider>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: '#282828',
+            color:      '#fff',
+            border:     '1px solid rgba(255,255,255,0.1)',
+          },
+        }}
+      />
       <Component {...pageProps} />
-    </>
+    </ThemeProvider>
   );
 }
