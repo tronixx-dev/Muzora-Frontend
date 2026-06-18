@@ -45,21 +45,20 @@ export default function HomePage() {
 
   return (
     <AppLayout>
-      {/* Greeting */}
-      <h1 className="text-3xl font-bold text-white mb-8">
+      <h1 className="text-2xl md:text-3xl font-bold text-white mb-6 md:mb-8">
         {getGreeting()}{user ? `, ${user.name.split(' ')[0]}` : ''} 👋
       </h1>
 
-      {/* Trending songs grid */}
+      {/* Trending songs */}
       {songs.length > 0 && (
-        <section className="mb-10">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl font-bold text-white">Trending now</h2>
+        <section className="mb-8 md:mb-10">
+          <div className="flex items-center justify-between mb-4 md:mb-5">
+            <h2 className="text-lg md:text-xl font-bold text-white">Trending now</h2>
             <button className="text-gray-400 text-sm hover:text-white transition-colors font-medium">
               Show all
             </button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             {songs.map((song) => (
               <SongCard key={song._id} song={song} queue={songs} />
             ))}
@@ -69,14 +68,14 @@ export default function HomePage() {
 
       {/* Albums */}
       {albums.length > 0 && (
-        <section className="mb-10">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl font-bold text-white">New albums</h2>
+        <section className="mb-8 md:mb-10">
+          <div className="flex items-center justify-between mb-4 md:mb-5">
+            <h2 className="text-lg md:text-xl font-bold text-white">New albums</h2>
             <button className="text-gray-400 text-sm hover:text-white transition-colors font-medium">
               Show all
             </button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
             {albums.map((album) => (
               <AlbumCard key={album._id} album={album} />
             ))}
@@ -84,21 +83,18 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* Popular artists */}
+      {/* Artists */}
       {artists.length > 0 && (
-        <section className="mb-10">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl font-bold text-white">Popular artists</h2>
+        <section className="mb-8 md:mb-10">
+          <div className="flex items-center justify-between mb-4 md:mb-5">
+            <h2 className="text-lg md:text-xl font-bold text-white">Popular artists</h2>
             <button className="text-gray-400 text-sm hover:text-white transition-colors font-medium">
               Show all
             </button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+          <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
             {artists.map((artist) => (
-              <div
-                key={artist._id}
-                className="flex flex-col items-center gap-3 group cursor-pointer"
-              >
+              <div key={artist._id} className="flex flex-col items-center gap-2 group cursor-pointer">
                 <div className="w-full aspect-square rounded-full overflow-hidden bg-dark-100">
                   <img
                     src={artist.imageUrl || '/placeholder.png'}
@@ -106,19 +102,18 @@ export default function HomePage() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                   />
                 </div>
-                <p className="text-white text-sm font-medium text-center truncate w-full">
+                <p className="text-white text-xs md:text-sm font-medium text-center truncate w-full">
                   {artist.name}
                 </p>
-                <p className="text-gray-500 text-xs">Artist</p>
               </div>
             ))}
           </div>
         </section>
       )}
 
-      {/* Top songs list */}
+      {/* Top songs list - hidden on mobile */}
       {songs.length > 0 && (
-        <section>
+        <section className="hidden md:block">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-xl font-bold text-white">Top songs</h2>
           </div>
@@ -138,14 +133,12 @@ export default function HomePage() {
 
       {/* Empty state */}
       {songs.length === 0 && albums.length === 0 && artists.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-32 text-center">
-          <div className="w-20 h-20 bg-dark-100 rounded-full flex items-center justify-center mb-6">
-            <span className="text-4xl">🎵</span>
+        <div className="flex flex-col items-center justify-center py-20 md:py-32 text-center">
+          <div className="w-16 h-16 md:w-20 md:h-20 bg-dark-100 rounded-full flex items-center justify-center mb-4 md:mb-6">
+            <span className="text-3xl md:text-4xl">🎵</span>
           </div>
-          <h2 className="text-white text-xl font-bold mb-2">No music yet</h2>
-          <p className="text-gray-400 text-sm mb-6">
-            Upload songs from the admin panel to get started
-          </p>
+          <h2 className="text-white text-lg md:text-xl font-bold mb-2">No music yet</h2>
+          <p className="text-gray-400 text-sm">Upload songs from the admin panel to get started</p>
         </div>
       )}
     </AppLayout>
