@@ -57,7 +57,6 @@ export default function Player() {
     queue, queueIndex,
   } = usePlayerStore();
 
-  // Extract color from album art
   useEffect(() => {
     if (!currentSong?.coverUrl) return;
     const img = new window.Image();
@@ -119,7 +118,6 @@ export default function Player() {
             borderTop: `1px solid rgba(${neonColor},0.3)`,
           }}
         >
-          {/* Neon top accent */}
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, height: '2px',
             background: `linear-gradient(90deg, transparent, rgba(${neonColor},1), #1db954, rgba(${neonColor},1), transparent)`,
@@ -138,19 +136,13 @@ export default function Player() {
             </button>
           </div>
 
-          {/* Album art with neon border */}
           <div className="flex-1 flex items-center justify-center px-10">
-            <div style={{
-              position: 'relative',
-              width: '100%',
-              maxWidth: '280px',
-            }}>
+            <div style={{ position: 'relative', width: '100%', maxWidth: '280px' }}>
               <div style={{
                 position: 'absolute', inset: '-3px',
                 borderRadius: '20px',
                 background: `linear-gradient(135deg, rgba(${neonColor},0.8), #1db954, rgba(${neonColor},0.4))`,
                 padding: '2px',
-                filter: `blur(0px)`,
                 boxShadow: `0 0 30px rgba(${neonColor},0.6), 0 0 60px rgba(29,185,84,0.3)`,
               }} />
               <img
@@ -177,11 +169,10 @@ export default function Player() {
                 <p style={{ color: `rgba(${neonColor},0.7)`, fontSize: '14px', marginTop: '4px' }}>{currentSong.artist?.name}</p>
               </div>
               <button onClick={() => setLiked(!liked)}>
-                <FiHeart size={24} style={{ color: liked ? '#1db954' : 'rgba(255,255,255,0.3)', filter: liked ? '0 0 10px #1db954' : 'none' }} fill={liked ? 'currentColor' : 'none'} />
+                <FiHeart size={24} style={{ color: liked ? '#1db954' : 'rgba(255,255,255,0.3)' }} fill={liked ? 'currentColor' : 'none'} />
               </button>
             </div>
 
-            {/* Progress bar */}
             <div style={{ position: 'relative', height: '4px', background: 'rgba(255,255,255,0.08)', borderRadius: '2px', marginBottom: '8px', cursor: 'pointer' }}>
               <div style={{
                 position: 'absolute', top: 0, left: 0,
@@ -205,7 +196,6 @@ export default function Player() {
               <span>{fmt(progress)}</span><span>{fmt(duration)}</span>
             </div>
 
-            {/* Controls */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
               <button onClick={toggleShuffle} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                 <FiShuffle size={22} style={{ color: shuffle ? '#1db954' : 'rgba(255,255,255,0.4)' }} />
@@ -214,7 +204,6 @@ export default function Player() {
                 <FiSkipBack size={34} style={{ color: 'white' }} fill="white" />
               </button>
 
-              {/* Play button */}
               <button
                 onClick={togglePlay}
                 style={{
@@ -238,7 +227,6 @@ export default function Player() {
               </button>
             </div>
 
-            {/* Volume */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <FiVolumeX size={16} style={{ color: 'rgba(255,255,255,0.3)', flexShrink: 0 }} />
               <div style={{ flex: 1, height: '3px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', position: 'relative' }}>
@@ -260,14 +248,12 @@ export default function Player() {
       ) : (
         <div style={{ position: 'relative', background: '#050505', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
 
-          {/* Neon top line */}
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
             background: `linear-gradient(90deg, transparent 0%, rgba(${neonColor},0.8) 25%, #1db954 50%, rgba(${neonColor},0.8) 75%, transparent 100%)`,
             boxShadow: `0 0 15px rgba(${neonColor},0.5), 0 0 30px rgba(29,185,84,0.3)`,
           }} />
 
-          {/* Progress bar full width */}
           <div
             style={{ position: 'relative', height: '3px', background: 'rgba(255,255,255,0.06)', cursor: 'pointer' }}
             className="group"
@@ -295,8 +281,8 @@ export default function Player() {
               style={{ position: 'absolute', inset: 0, width: '100%', opacity: 0, cursor: 'pointer', height: '100%' }} />
           </div>
 
-          {/* MOBILE MINI */}
-          <div className="md:hidden" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px' }}>
+          {/* MOBILE MINI - fixed display conflict */}
+          <div className="flex md:hidden" style={{ alignItems: 'center', gap: '12px', padding: '10px 16px' }}>
             <img
               src={currentSong.coverUrl}
               onClick={() => setExpanded(true)}
@@ -329,7 +315,6 @@ export default function Player() {
           {/* DESKTOP */}
           <div className="hidden md:grid" style={{ gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', padding: '10px 24px', gap: '16px' }}>
 
-            {/* Left */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', minWidth: 0 }}>
               <div style={{ position: 'relative', flexShrink: 0 }}>
                 <img
@@ -362,16 +347,15 @@ export default function Player() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
                 <Equalizer isPlaying={isPlaying} />
                 <button onClick={() => setLiked(!liked)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: liked ? '#1db954' : 'rgba(255,255,255,0.25)' }}>
-                  <FiHeart size={16} fill={liked ? 'currentColor' : 'none'} style={{ filter: liked ? '0 0 8px #1db954' : 'none' }} />
+                  <FiHeart size={16} fill={liked ? 'currentColor' : 'none'} />
                 </button>
               </div>
             </div>
 
-            {/* Center */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                 <button onClick={toggleShuffle} style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative' }}>
-                  <FiShuffle size={16} style={{ color: shuffle ? '#1db954' : 'rgba(255,255,255,0.35)', filter: shuffle ? '0 0 8px #1db954' : 'none' }} />
+                  <FiShuffle size={16} style={{ color: shuffle ? '#1db954' : 'rgba(255,255,255,0.35)' }} />
                   {shuffle && <span style={{ position: 'absolute', bottom: '-4px', left: '50%', transform: 'translateX(-50%)', width: '4px', height: '4px', background: '#1db954', borderRadius: '50%', boxShadow: '0 0 6px #1db954' }} />}
                 </button>
 
@@ -387,7 +371,6 @@ export default function Player() {
                     border: 'none', cursor: 'pointer',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     boxShadow: `0 0 20px rgba(${neonColor},0.7), 0 0 40px rgba(29,185,84,0.4), inset 0 1px 0 rgba(255,255,255,0.15)`,
-                    transition: 'transform 0.1s ease',
                   }}
                 >
                   {isPlaying
@@ -412,7 +395,6 @@ export default function Player() {
               </div>
             </div>
 
-            {/* Right */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px' }}>
               <button onClick={toggleLyrics} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                 <FiMic size={15} style={{ color: showLyrics ? '#1db954' : 'rgba(255,255,255,0.25)' }} />
